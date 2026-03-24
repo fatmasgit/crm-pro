@@ -1,0 +1,35 @@
+import { AppSidebar } from "@/components/app-sidebar"
+import { SidebarProvider } from "@/components/ui/sidebar"
+import { prisma } from "@/lib/prisma"
+import { createSupabaseServerClient } from "@/lib/superbase/server"
+import { QueryProvider } from "@/providers/query-provider"
+import { redirect } from "next/navigation"
+
+export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
+    // Check authentication
+    const supabase = await createSupabaseServerClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) redirect("/login")
+
+    // Fetch the user profile
+    const profile = await prisma.profile.findUnique({
+        where: {
+            id: user.id
+        }
+    })
+
+    if (!profile || !profile.isActive) {
+        await supabase.auth.signOut()
+        redirect("/login")
+    }
+
+    return (
+        <QueryProvider>
+            <SidebarProvider>
+                <AppSidebar role={profile.role} user={profile} />
+                {children}
+            </SidebarProvider>
+        </QueryProvider>
+
+    )
+}

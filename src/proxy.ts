@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import supabaseServerClient from "@/lib/superbase/server";
+import { createSupabaseServerClient } from "@/lib/superbase/server";
 
 export async function proxy(request: NextRequest) {
-  const { data: user } = await supabaseServerClient.auth.getUser();
+  const supabase = await createSupabaseServerClient();
+  const { data: user } = await supabase.auth.getUser();
 
   if (!user.user && request.nextUrl.pathname.startsWith("/crm")) {
     const url = request.nextUrl.clone();
@@ -12,7 +13,7 @@ export async function proxy(request: NextRequest) {
 
   if (user.user && request.nextUrl.pathname.startsWith("/login")) {
     const url = request.nextUrl.clone();
-    url.pathname = "/crm";
+    url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
@@ -20,5 +21,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/crm/:path*", "/login"],
+  matcher: ["/dashboard", "/login", "/leads", "/reminders", "/users"],
 };

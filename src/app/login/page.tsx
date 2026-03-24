@@ -31,7 +31,7 @@ export default function Login() {
             return
         }
 
-        router.push("/crm");
+        router.push("/dashboard");
         router.refresh()
         setLoading(false)
     }
@@ -67,7 +67,7 @@ export default function Login() {
 
                         {/* Error Message */}
                         {error && <p className="text-red-500 text-sm">{error}</p>}
-                        <Button className="w-full " type="submit">Login</Button>
+                        <Button className="w-full" type="submit">Login</Button>
                     </form>
                 </CardContent>
             </Card>
