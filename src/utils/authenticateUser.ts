@@ -1,6 +1,6 @@
 import { Role } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { createSupabaseServerClient } from "@/lib/superbase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export class AuthenticationError extends Error {
   constructor(
