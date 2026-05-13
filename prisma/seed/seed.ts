@@ -3,8 +3,8 @@ import supabaseAdmin from "@/lib/supabase/admin";
 
 const main = async () => {
   const { data, error } = await supabaseAdmin.auth.admin.createUser({
-    email: "admin@crm.com",
-    password: "admin123",
+    email: "FatmaIbrahim@crm.com",
+    password: "FatmaIbrahim123",
     email_confirm: true,
   });
 
@@ -18,8 +18,8 @@ const main = async () => {
   const admin = await prisma.profile.create({
     data: {
       id: data.user.id,
-      email: "admin@crm.com",
-      name: "Hesham El-Mahdi",
+      email: "fatmaibrahim@crm.com",
+      name: "Fatma Ibrahim",
       role: "ADMIN",
     },
   });

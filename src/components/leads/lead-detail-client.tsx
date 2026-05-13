@@ -1,13 +1,14 @@
 "use client";
 
 import { Profile, Role } from "@/generated/prisma/client";
-import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetLead } from "@/lib/tanstack/useLeads";
 import { formatLeadDate, StatusBadge } from "@/components/leads/reusable";
 import { Overview } from "./lead-details/Overview";
 import { Timeline } from "./lead-details/Timeline";
 import { Reminders } from "./lead-details/Reminders";
+import { AI } from "./lead-details/AI";
+import Files from "./lead-details/Files";
 
 export function LeadDetailClient({
   id,
@@ -53,6 +54,7 @@ export function LeadDetailClient({
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="timeline">Activities</TabsTrigger>
           <TabsTrigger value="reminders">Reminders</TabsTrigger>
+          <TabsTrigger value="ai">AI</TabsTrigger>
           <TabsTrigger value="files">Files</TabsTrigger>
         </TabsList>
 
@@ -68,12 +70,12 @@ export function LeadDetailClient({
           <Reminders leadId={id} />
         </TabsContent>
 
+        <TabsContent value="ai">
+          <AI leadId={id} />
+        </TabsContent>
+
         <TabsContent value="files">
-          <Card>
-            <CardContent className="py-8 text-sm text-muted-foreground">
-              File uploads will be built in a later session.
-            </CardContent>
-          </Card>
+          <Files leadId={id} />
         </TabsContent>
       </Tabs>
     </div>
