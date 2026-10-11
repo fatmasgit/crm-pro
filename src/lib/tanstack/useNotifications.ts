@@ -15,7 +15,7 @@ export function useGetNotifications(params: ListNotificationsParams) {
       });
       return data.data;
     },
-    refetchInterval: 1000 * 5, // 1 minute
+    refetchInterval: 1000 * 10, // 10 seconds
   });
 }
 

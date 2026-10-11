@@ -145,7 +145,7 @@ export function UserActions({ user }: { user: User }) {
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" className="w-40">
           <DropdownMenuItem
             onClick={() => {
               setUpdateUserForm({ name: user.name, role: user.role });
@@ -158,6 +158,7 @@ export function UserActions({ user }: { user: User }) {
           <DropdownMenuItem
             onClick={handleResendInvite}
             disabled={!user.isActive || resendInvite.isPending}
+
           >
             <Mail className="mr-2 h-4 w-4" />
             {resendInvite.isPending ? "Sending…" : "Resend invite"}

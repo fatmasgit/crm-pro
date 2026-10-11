@@ -32,9 +32,11 @@ export function AppSidebar({ role, user }: { role: Role, user: Profile }) {
     <Sidebar className="border-r border-sidebar-border bg-sidebar">
       <SidebarHeader className="gap-3 px-5 py-6">
         <div className="space-y-1">
-          <h4 className="text-[1.75rem] font-bold tracking-tight text-slate-900">
-            CRM Pro
-          </h4>
+          <Link href="/dashboard" className="text-decoration-none">
+            <h4 className="text-[1.75rem] font-bold tracking-tight text-slate-900">
+              CRM Pro
+            </h4>
+          </Link>
           <p className="text-xs font-semibold tracking-[0.18em] text-blue-600 uppercase">
             {formatRoleLabel(role)}
           </p>

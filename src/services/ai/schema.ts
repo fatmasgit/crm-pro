@@ -8,14 +8,14 @@ export const leadBriefSchema = z.object({
       "A brief summary of the lead's situation based on activity history.",
     ),
   keyFacts: z
-    .array(z.string().max(100))
+    .array(z.string().max(300))
     .min(2)
     .max(5)
     .describe(
       "2-5 bullet points about the lead (stage, activity pattern, engagement level, etc.)",
     ),
   risks: z
-    .array(z.string().max(100))
+    .array(z.string().max(300))
     .max(3)
     .describe("up to 3 risks the lead is facing or objections"),
   nextActions: z
@@ -34,7 +34,7 @@ export const leadBriefSchema = z.object({
     .max(3)
     .describe("Up to 3 recommended next actions with reasoning"),
   questionsToAskNext: z
-    .array(z.string())
+    .array(z.string().max(150))
     .max(3)
     .describe("Up to 3 specific questions to ask the lead on the next call"),
 });

@@ -71,6 +71,9 @@ Generate a brief for the agent. Include:
 3. Potential risks or concerns
 4. Recommended next actions with clear reasoning
 5. Specific questions to ask on the next call
+6. Follow the provided output schema exactly, and do not return any empty fields or empty values
+7. Follow the schema exactly and strictly respect all character limits
+
 
 Focus on actionable insights. Be specific. Use only the data provided.`;
 }

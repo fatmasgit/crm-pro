@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, data: brief });
   } catch (error) {
+    console.log("Error generating lead brief:", error);
     return handleRouteError(error);
   }
 }

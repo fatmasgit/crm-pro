@@ -5,9 +5,17 @@ import {
   dbGetNextReminder,
   dbGetRecentActivities,
 } from "./db";
-import { buildCallFollowupPrompt, buildLeadBriefPrompt, validateLeadAccess } from "./helpers";
+import {
+  buildCallFollowupPrompt,
+  buildLeadBriefPrompt,
+  validateLeadAccess,
+} from "./helpers";
 import { generateText, Output } from "ai";
-import { callFollowUpSchema, leadBriefSchema, SaveLeadBriefRequest } from "./schema";
+import {
+  callFollowUpSchema,
+  leadBriefSchema,
+  SaveLeadBriefRequest,
+} from "./schema";
 import { CallOutcome } from "../activity";
 import { createAIActivity } from "../activity/service";
 import { LeadServiceError } from "../lead/service";
@@ -36,7 +44,7 @@ export async function generateLeadBrief(leadId: string, user: Profile) {
   });
 
   const { output } = await generateText({
-    model: "deepseek/deepseek-v3.2-thinking",
+    model: "minimax/minimax-m2.7",
     output: Output.object({ schema: leadBriefSchema }),
     prompt,
   });
@@ -94,7 +102,7 @@ export async function generateCallFollowup(
   });
 
   const { output } = await generateText({
-    model: "deepseek/deepseek-v3.2-thinking",
+    model: "minimax/minimax-m2.7",
     output: Output.object({ schema: callFollowUpSchema }),
     prompt,
   });

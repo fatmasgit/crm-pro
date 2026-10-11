@@ -80,6 +80,9 @@ export async function createUser(data: CreateUserSchema) {
     await supabaseAdmin.auth.admin.generateLink({
       type: "magiclink",
       email: data.email,
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      },
     });
 
   if (magicLinkError || !magicLinkData?.properties?.action_link) {
@@ -241,6 +244,9 @@ export async function resendInvite(targetUserId: string) {
     await supabaseAdmin.auth.admin.generateLink({
       type: "magiclink",
       email: target.email,
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      },
     });
 
   if (magicLinkError || !magicLinkData?.properties?.action_link) {

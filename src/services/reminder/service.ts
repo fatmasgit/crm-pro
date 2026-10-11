@@ -1,5 +1,9 @@
 import { UserSnapshot } from "@/utils/types/user";
-import { CreateReminderRequest, ListLeadRemindersRequest, ListMyRemindersRequest } from "./schema";
+import {
+  CreateReminderRequest,
+  ListLeadRemindersRequest,
+  ListMyRemindersRequest,
+} from "./schema";
 import {
   dbCreateReminder,
   dbGetLeadAssignedTo,
@@ -63,9 +67,15 @@ export const createReminder = async (
 };
 
 export const fireReminder = async (reminderId: string) => {
+  console.log("🔥 fireReminder started", reminderId);
+
   const idempotencyKey = `reminder:fired:${reminderId}`;
+
+  console.log("🔴 checking Redis");
+
   const alreadyProcessed = await redis.get(idempotencyKey);
 
+  console.log("🟢 Redis response", alreadyProcessed);
   if (alreadyProcessed)
     return {
       status: "duplicate" as const,
@@ -92,7 +102,7 @@ export const fireReminder = async (reminderId: string) => {
     await NotificationService.create(
       {
         title: reminder.title,
-        body: `Reminder for lead ${reminder.lead.name}. Note: ${reminder.note}`,
+        body: `Reminder for lead ${reminder.lead.name}.${reminder.note ? ` Note: ${reminder.note}` : ""}`,
         recipientId: reminder.assignedToId,
         leadId: reminder.leadId,
       },

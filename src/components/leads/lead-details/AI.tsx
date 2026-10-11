@@ -122,13 +122,15 @@ export const AI = ({ leadId }: { leadId: string }) => {
 
       {/* Single Dialog for previewing generated brief before saving */}
       <Dialog open={isGeneratedBriefOpen} onOpenChange={setIsGeneratedBriefOpen}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto ">
           <DialogHeader>
             <DialogTitle>AI-Generated Brief</DialogTitle>
           </DialogHeader>
           {generatedBrief ? (
-            <div className="space-y-4">
-              <BriefContent brief={generatedBrief} />
+            <div className="space-y-4  ">
+              <div className=" m-4">
+                <BriefContent brief={generatedBrief} />
+              </div>
               <DialogFooter>
                 <Button onClick={handleSave} disabled={saveBrief.isPending}>
                   {saveBrief.isPending ? "Saving..." : "Save Brief"}

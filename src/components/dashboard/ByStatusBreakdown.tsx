@@ -11,7 +11,7 @@ import {
 const STATUS_COLORS: Record<string, string> = {
   OPEN: "var(--chart-1)",
   WON: "var(--chart-2)",
-  LOST: "var(--chart-3)",
+  LOST: "var(--chart-5)",
 };
 
 const ByStatusBreakdown = ({
@@ -33,7 +33,7 @@ const ByStatusBreakdown = ({
     },
     LOST: {
       label: "Lost",
-      color: "var(--chart-3)",
+      color: "var(--chart-5)",
     },
   } satisfies ChartConfig;
 

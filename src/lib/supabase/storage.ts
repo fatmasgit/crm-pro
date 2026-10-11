@@ -15,6 +15,8 @@ export async function uploadLeadAttachment(
     });
 
   if (error) {
+    console.error("SUPABASE UPLOAD ERROR:", error);
+
     throw new Error(`Failed to upload attachment: ${error.message}`);
   }
 }

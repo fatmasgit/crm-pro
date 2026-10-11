@@ -12,6 +12,6 @@ export function useDashboardOverview() {
     },
     // Dashboard data is expensive to compute. Keep it fresh for
     // 60 seconds before refetching on window focus.
-    staleTime: 60 * 1000,
+    /*    staleTime: 60 * 1000, */
   });
 }

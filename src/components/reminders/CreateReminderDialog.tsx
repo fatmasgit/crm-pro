@@ -144,7 +144,7 @@ export function CreateReminderDialog({ leadId }: { leadId?: string }) {
                 <SelectTrigger>
                   <SelectValue placeholder="Select a lead" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper" className="max-h-60">
                   {leads.map((lead) => (
                     <SelectItem key={lead.id} value={lead.id}>
                       {lead.name}

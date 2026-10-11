@@ -21,6 +21,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Pagination } from "@/components/leads/reusable";
 import { CreateReminderDialog } from "./CreateReminderDialog";
+import { useReminderRealtime } from "@/hooks/useReminderRealtime";
 
 type FilterTab = "all" | "upcoming" | "overdue" | "completed" | "cancelled";
 
@@ -40,6 +41,7 @@ function ReminderStatusBadge({
   dueAt: string | Date;
 }) {
   const display = getReminderDisplayStatus(status, dueAt);
+
   const variantMap: Record<
     string,
     "info" | "destructive" | "success" | "outline"
@@ -49,12 +51,14 @@ function ReminderStatusBadge({
     completed: "success",
     cancelled: "outline",
   };
+
   const labelMap: Record<string, string> = {
     upcoming: "Upcoming",
     overdue: "Overdue",
     completed: "Completed",
     cancelled: "Cancelled",
   };
+
   return <Badge variant={variantMap[display]}>{labelMap[display]}</Badge>;
 }
 
@@ -70,11 +74,14 @@ function getApiStatusForTab(tab: FilterTab): string | undefined {
 }
 
 export function RemindersPageClient() {
+  useReminderRealtime();
+
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
   const apiStatus = getApiStatusForTab(activeTab);
+
   const { data, isLoading, isError } = useGetMyReminders({
     page,
     pageSize,
@@ -83,17 +90,22 @@ export function RemindersPageClient() {
 
   const allReminders = data?.reminders ?? [];
 
-  // Client-side filter for upcoming/overdue (both are PENDING in the DB, plus FIRED for overdue)
   const reminders = allReminders.filter((r) => {
     if (activeTab === "upcoming") {
-      return r.status === "PENDING" && new Date(r.dueAt) >= new Date();
+      return (
+        r.status === "PENDING" &&
+        new Date(r.dueAt) >= new Date()
+      );
     }
+
     if (activeTab === "overdue") {
       return (
-        (r.status === "PENDING" && new Date(r.dueAt) < new Date()) ||
+        (r.status === "PENDING" &&
+          new Date(r.dueAt) < new Date()) ||
         r.status === "FIRED"
       );
     }
+
     return true;
   });
 
@@ -102,13 +114,17 @@ export function RemindersPageClient() {
 
   const total = data?.pagination.total ?? 0;
   const pageCount = data?.pagination.pages ?? 0;
-  const startItem = total === 0 ? 0 : (page - 1) * pageSize + 1;
-  const endItem = total === 0 ? 0 : Math.min(page * pageSize, total);
 
-  // Count overdue for the badge
+  const startItem =
+    total === 0 ? 0 : (page - 1) * pageSize + 1;
+
+  const endItem =
+    total === 0 ? 0 : Math.min(page * pageSize, total);
+
   const overdueCount = allReminders.filter(
     (r) =>
-      (r.status === "PENDING" && new Date(r.dueAt) < new Date()) ||
+      (r.status === "PENDING" &&
+        new Date(r.dueAt) < new Date()) ||
       r.status === "FIRED"
   ).length;
 
@@ -124,19 +140,28 @@ export function RemindersPageClient() {
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
             My Reminders
           </h1>
+
           <p className="text-sm text-slate-500">
             Keep follow-ups visible so nothing slips between conversations.
           </p>
         </div>
+
         <CreateReminderDialog />
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
+          <TabsTrigger value="all">
+            All
+          </TabsTrigger>
+
+          <TabsTrigger value="upcoming">
+            Upcoming
+          </TabsTrigger>
+
           <TabsTrigger value="overdue" className="gap-1.5">
             Overdue
+
             {overdueCount > 0 && (
               <Badge
                 variant="destructive"
@@ -146,8 +171,14 @@ export function RemindersPageClient() {
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="completed">Completed</TabsTrigger>
-          <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
+
+          <TabsTrigger value="completed">
+            Completed
+          </TabsTrigger>
+
+          <TabsTrigger value="cancelled">
+            Cancelled
+          </TabsTrigger>
         </TabsList>
       </Tabs>
 
@@ -168,37 +199,70 @@ export function RemindersPageClient() {
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-50/70">
-                <TableHead className="w-[160px]">Due Date</TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead>Lead</TableHead>
-                <TableHead className="w-[120px]">Status</TableHead>
-                <TableHead className="w-[200px] text-right">Actions</TableHead>
+                <TableHead className="w-[160px]">
+                  Due Date
+                </TableHead>
+
+                <TableHead>
+                  Title
+                </TableHead>
+
+                <TableHead>
+                  Lead
+                </TableHead>
+
+                <TableHead className="w-[120px]">
+                  Status
+                </TableHead>
+
+                <TableHead className="w-[200px] text-right">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
               {reminders.map((reminder) => {
                 const displayStatus = getReminderDisplayStatus(
                   reminder.status,
                   reminder.dueAt
                 );
+
                 const canComplete =
-                  reminder.status === "PENDING" || reminder.status === "FIRED";
-                const canCancel = reminder.status === "PENDING";
-                const isOverdue = displayStatus === "overdue";
+                  reminder.status === "PENDING" ||
+                  reminder.status === "FIRED";
+
+                const canCancel =
+                  reminder.status === "PENDING";
+
+                const isOverdue =
+                  displayStatus === "overdue";
 
                 return (
                   <TableRow
                     key={reminder.id}
-                    className={isOverdue ? "bg-red-50/50" : ""}
+                    className={
+                      isOverdue
+                        ? "bg-red-50/50"
+                        : ""
+                    }
                   >
                     <TableCell
-                      className={`text-sm ${isOverdue ? "font-medium text-red-600" : "text-slate-700"}`}
+                      className={`text-sm ${isOverdue
+                          ? "font-medium text-red-600"
+                          : "text-slate-700"
+                        }`}
                     >
-                      {format(new Date(reminder.dueAt), "MMM d, h:mm a")}
+                      {format(
+                        new Date(reminder.dueAt),
+                        "MMM d, h:mm a"
+                      )}
                     </TableCell>
+
                     <TableCell className="text-sm font-medium text-slate-900">
                       {reminder.title}
                     </TableCell>
+
                     <TableCell>
                       <Link
                         href={`/leads/${reminder.lead.id}`}
@@ -207,12 +271,14 @@ export function RemindersPageClient() {
                         {reminder.lead.name}
                       </Link>
                     </TableCell>
+
                     <TableCell>
                       <ReminderStatusBadge
                         status={reminder.status}
                         dueAt={reminder.dueAt}
                       />
                     </TableCell>
+
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
                         {canComplete && (
@@ -221,22 +287,31 @@ export function RemindersPageClient() {
                             size="sm"
                             className="h-7 text-xs text-green-600 hover:bg-green-50 hover:text-green-700"
                             onClick={() =>
-                              completeReminder.mutate(reminder.id)
+                              completeReminder.mutate(
+                                reminder.id
+                              )
                             }
-                            disabled={completeReminder.isPending}
+                            disabled={
+                              completeReminder.isPending
+                            }
                           >
                             Complete
                           </Button>
                         )}
+
                         {canCancel && (
                           <Button
                             variant="outline"
                             size="sm"
                             className="h-7 text-xs text-slate-600"
                             onClick={() =>
-                              cancelReminder.mutate(reminder.id)
+                              cancelReminder.mutate(
+                                reminder.id
+                              )
                             }
-                            disabled={cancelReminder.isPending}
+                            disabled={
+                              cancelReminder.isPending
+                            }
                           >
                             Cancel
                           </Button>
