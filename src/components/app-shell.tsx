@@ -33,7 +33,7 @@ export function AppShell({
           <SidebarTrigger className="size-9 rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 hover:text-slate-950" />
           <Separator
             orientation="vertical"
-            className="hidden h-6 bg-slate-200 sm:block"
+            className="hidden  bg-slate-200 sm:block"
           />
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-slate-900">
