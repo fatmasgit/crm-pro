@@ -16,7 +16,7 @@
 - **Activity tracking:** Maintain lead activity logs to record interactions and progress.
 - **Dashboard:** Monitor key CRM metrics, lead distribution, conversion rates, and agent performance through interactive charts.
 - **AI-powered lead analysis:** Generate contextual lead insights using the **Vercel AI SDK** and **Vercel AI Gateway**, with prompt engineering and **Zod** schema validation for structured outputs.
-- **Role-based access control:** Support admin, manager, and agent roles with permissions enforced across the application.
+- **Role-based access control:** Support admin, manager, and agent roles with permissions enforced on the backend.
 - **Authentication and invitations:** Use **Supabase Auth** and magic-link invitations sent through **Resend**.
 - **Automated reminders and notifications:** Use **QStash** serverless jobs to schedule follow-up tasks and notifications.
 - **Data fetching and mutations:** Use **TanStack Query** for client-side data fetching, caching, and mutations.
@@ -95,10 +95,24 @@ This combination helps keep AI responses aligned with the application's expected
 
 ---
 
+## Role-Based Access Control
+
+The CRM uses role-based permissions to control access to leads, reminders, dashboard data, and administrative operations. **Permissions are enforced on the backend**, preventing users from performing actions outside their assigned role, even if they attempt to bypass the frontend.
+
+| Role | Permissions |
+|---|---|
+| **Agent** | Work with assigned leads, view their own pipeline and reminders, update lead progress, add activities, create reminders for accessible leads, and export assigned leads. Cannot create or reassign leads or edit lead contact details. |
+| **Manager** | View all leads and team-wide dashboard data, create and update leads, reassign leads to active agents, view team reminders, and export all leads. Cannot manage users or import leads. |
+| **Admin** | Has all manager permissions, plus user management and lead import. Can create, update, deactivate, and reactivate users, and resend invitations. |
+
+Backend permission checks help ensure that access restrictions are applied to API operations and data, rather than relying solely on hiding or disabling frontend controls.
+
+---
+
 ## Background Jobs and Invitations
 
 - **Invitations:** Supabase Auth magic-link invitations are delivered through Resend.
-- **Reminders and notifications:** QStash schedules serverless jobs for follow-up workflows, with Redis supporting reminder idempotency and caching where needed.
+- **Reminders and notifications:** QStash schedules serverless jobs for follow-up workflows, with Redis helping prevent duplicate reminders and manage caching where needed.
 
 ---
 
@@ -140,19 +154,19 @@ crm-pro/
     │   │   │   │   ├── activities/
     │   │   │   │   │   ├── call-attempt/
     │   │   │   │   │   └── note/
-    │   │   │   │   ├── attachments/
-    │   │   │   │   │   └── [attachmentId]/
-    │   │   │   │   ├── lead-brief/
-    │   │   │   │   └── reminders/
-    │   │   │   ├── export/
-    │   │   │   └── reassign/
-    │   │   ├── notifications/
-    │   │   │   └── [id]/
-    │   │   │       └── read/
-    │   │   ├── reminders/
-    │   │   │   └── [id]/
-    │   │   └── upstash/
-    │   │       └── reminder-due/
+    │   │   │   ├── attachments/
+    │   │   │   │   └── [attachmentId]/
+    │   │   │   ├── lead-brief/
+    │   │   │   └── reminders/
+    │   │   ├── export/
+    │   │   └── reassign/
+    │   ├── notifications/
+    │   │   └── [id]/
+    │   │       └── read/
+    │   ├── reminders/
+    │   │   └── [id]/
+    │   └── upstash/
+    │       └── reminder-due/
     │   ├── auth/
     │   │   └── callback/
     │   └── login/
