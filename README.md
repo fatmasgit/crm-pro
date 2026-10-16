@@ -2,9 +2,11 @@
 
 **Production:** [https://crm-pro-pa87.vercel.app/](https://crm-pro-pa87.vercel.app/)
 
+**Demo:** [View Demo on Google Drive](https://drive.google.com/drive/folders/1hT8UUh7p3Ictt9-_wxOEOh8pbYZqEsMb?usp=sharing)
+
 ## Overview
 
-**Whispyr AI** is a full-stack real estate CRM built with Next.js, featuring role-based access control, lead and activity management, automated follow-ups and reminders, and AI-powered lead insights.
+**Whispyr AI** is a full-stack real estate CRM built with **Next.js**, featuring role-based access control, lead and activity management, automated follow-ups and reminders, and AI-powered lead insights.
 
 ---
 
@@ -12,13 +14,14 @@
 
 - **Lead management:** Organize real estate leads and track their stages through the pipeline.
 - **Activity tracking:** Maintain lead activity logs to record interactions and progress.
-- **AI-powered lead analysis:** Generate contextual lead insights using the Vercel AI SDK and AI Gateway, with prompt engineering and Zod schema validation for structured outputs.
+- **Dashboard:** Monitor key CRM metrics, lead distribution, conversion rates, and agent performance through interactive charts.
+- **AI-powered lead analysis:** Generate contextual lead insights using the **Vercel AI SDK** and **Vercel AI Gateway**, with prompt engineering and **Zod** schema validation for structured outputs.
 - **Role-based access control:** Support admin, manager, and agent roles with permissions enforced across the application.
-- **Authentication and invitations:** Use Supabase authentication and magic-link invitations sent through Resend.
-- **Automated reminders and notifications:** Use QStash serverless jobs to schedule follow-up tasks and notifications.
-- **Data fetching and mutations:** Use TanStack Query for client-side data fetching, caching, and mutations.
-- **Reusable dashboard UI:** Build consistent interfaces with shadcn/ui and Tailwind CSS, including charts, dialogs, sidebars, and data tables.
-- **Validated API data:** Use TypeScript and Zod schemas to define data structures and validate API requests and responses.
+- **Authentication and invitations:** Use **Supabase Auth** and magic-link invitations sent through **Resend**.
+- **Automated reminders and notifications:** Use **QStash** serverless jobs to schedule follow-up tasks and notifications.
+- **Data fetching and mutations:** Use **TanStack Query** for client-side data fetching, caching, and mutations.
+- **Reusable dashboard UI:** Build consistent interfaces with **shadcn/ui** and **Tailwind CSS**, including charts, dialogs, sidebars, and data tables.
+- **Validated API data:** Use **TypeScript** and **Zod** schemas to define data structures and validate API requests and responses.
 
 ---
 
@@ -26,17 +29,18 @@
 
 | Category | Technologies |
 |---|---|
-| Framework | Next.js App Router, React |
-| Language | TypeScript |
-| Styling and UI | Tailwind CSS, shadcn/ui |
-| Data fetching | TanStack Query |
-| Database ORM | Prisma |
-| Authentication | Supabase Auth |
-| Validation | Zod |
-| AI integration | Vercel AI SDK, Vercel AI Gateway |
-| Background jobs | QStash |
-| Email delivery | Resend |
-| Caching / data services | Redis |
+| Framework | **Next.js App Router**, **React** |
+| Language | **TypeScript** |
+| Styling and UI | **Tailwind CSS**, **shadcn/ui** |
+| Data fetching | **TanStack Query** |
+| Database ORM | **Prisma** |
+| Authentication | **Supabase Auth** |
+| Validation | **Zod** |
+| Charts | **Recharts** |
+| AI integration | **Vercel AI SDK**, **Vercel AI Gateway** |
+| Background jobs | **QStash** |
+| Email delivery | **Resend** |
+| Caching / data services | **Redis** |
 
 ---
 
@@ -54,7 +58,7 @@ A typical feature is organized around:
 
 For example, the reminder service is organized as follows:
 
-```bash
+```text
 src/services/reminder/
 ├── index.ts      # Centralized exports
 ├── schema.ts     # TypeScript types and Zod validation schemas
@@ -65,32 +69,42 @@ src/services/reminder/
 
 This structure separates validation, database access, business logic, and reusable utilities into focused modules, making the codebase easier to maintain and extend.
 
-Next.js App Router handles application routing, protected pages, and API routes. TanStack Query manages client-side server-state operations, while Prisma handles database queries and persistence. Authentication and role-based permissions restrict access according to the user's role.
+**Next.js App Router** handles application routing, protected pages, and API routes. **TanStack Query** manages client-side server-state operations, while **Prisma** handles database queries and persistence. Authentication and role-based permissions restrict access according to the user's role.
+
+---
+
+## Dashboard
+
+The dashboard displays key CRM metrics using **shadcn/ui** cards and **Recharts** visualizations.
+
+- **KPI cards:** Total leads, new leads this week, conversion rate, and overdue reminders.
+- **Leads by Stage:** A bar chart built with Recharts `BarChart`.
+- **Leads by Status:** A donut chart built with Recharts `PieChart`.
+- **Top Performing Agents:** The top five agents by won leads, visible to managers and admins only.
 
 ---
 
 ## AI Lead Analysis
 
-The AI lead-analysis feature uses the Vercel AI SDK and AI Gateway to generate insights from available lead context.
+The AI lead-analysis feature uses the **Vercel AI SDK** and **Vercel AI Gateway** to generate insights from available lead context.
 
-- **Prompt engineering:** Carefully designed prompts provide the model with relevant lead context and instructions for producing focused, useful analysis.
-- **Schema definition:** TypeScript types and Zod schemas define the expected structure of AI-generated results.
-- **Output validation:** Generated results are validated against the Zod schema so the application can work with structured, predictable data rather than relying only on free-form text.
+- **Prompt engineering:** Carefully designed prompts provide relevant lead context, including profile details, stage, status, recent activities, notes, and pending reminders, to generate focused, actionable insights. Call follow-ups also incorporate call outcomes and agent notes.
+- **Schema definition:** TypeScript types and Zod schemas define and validate structured AI outputs, including lead summaries, key facts, risks, recommended next actions, follow-up questions, call scripts, objection handlers, and suggested reminders.
 
-This combination helps keep AI responses aligned with the application's expected data format.
+This combination helps keep AI responses aligned with the application's expected data format and makes the generated insights easier to use within the CRM.
 
 ---
 
 ## Background Jobs and Invitations
 
-- **Invitations:** Supabase magic-link invitations are delivered through Resend.
-- **Reminders and notifications:** QStash schedules serverless jobs for follow-up workflows.
+- **Invitations:** Supabase Auth magic-link invitations are delivered through Resend.
+- **Reminders and notifications:** QStash schedules serverless jobs for follow-up workflows, with Redis supporting reminder idempotency and caching where needed.
 
 ---
 
 ## Folder Structure
 
-```bash
+```text
 crm-pro/
 ├── .vscode/
 ├── prisma/
